@@ -43,7 +43,7 @@ export default function Home() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="cta-btn"
-          onClick={() => navigate("/login")} // 🔹 Routes to login page
+          onClick={() => navigate("/signup")}
         >
           Get Started
         </motion.button>

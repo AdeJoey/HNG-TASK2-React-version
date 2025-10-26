@@ -2,22 +2,36 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
-import "./Login.css";
+import "./Login.css"; // Reusing the same CSS file
 
-export default function Login() {
+export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const success = login(email, password);
+    setError("");
+
+    // Validation
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    const success = signup(email, password);
     if (success) {
       navigate("/dashboard");
     } else {
-      setError("Invalid credentials. Try testuser@example.com / password123");
+      setError("Email already exists. Please use a different email.");
     }
   };
 
@@ -48,7 +62,7 @@ export default function Login() {
 
       <div className="login-box">
         <form className="login-form" onSubmit={handleSubmit}>
-          <h2>Login</h2>
+          <h2>Create Account</h2>
 
           <label>Email</label>
           <input
@@ -64,7 +78,16 @@ export default function Login() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
+            placeholder="Create a password"
+            required
+          />
+
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm your password"
             required
           />
 
@@ -75,16 +98,16 @@ export default function Login() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Login
+            Sign Up
           </motion.button>
 
           <p style={{ marginTop: "1rem", fontSize: "0.9rem", color: "#666" }}>
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              to="/signup"
+              to="/login"
               style={{ color: "#ee4266", fontWeight: "600" }}
             >
-              Sign up here
+              Login here
             </Link>
           </p>
         </form>
